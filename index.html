@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f3864">
+</head>
+<body>
+<title>Fire Alarm Service Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: one readable column of form sections, sticky progress header, action bar fixed to the bottom */
+:root{
+  --bg:#eef1f6;--card:#fff;--ink:#16203a;--mut:#4f5b72;--line:#c3cbda;--navy:#1f3864;--on:#fff;--in:#fff;
+  --ok:#1b6b3a;--okbg:#e3f3e8;--warn:#8a4b00;--warnbg:#fdf0dc;--err:#a3001b;--focus:#e0a100;
+  --font:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --bar:0px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1320;--card:#161d2d;--ink:#e9edf5;--mut:#a3aec3;--line:#2f3b55;--navy:#8eb0ef;--on:#0e1320;--in:#0e1320;
+  --ok:#7fd69c;--okbg:#17321f;--warn:#ffc46b;--warnbg:#3a2a10;--err:#ff8c9d;--focus:#ffcf4a;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1320;--card:#161d2d;--ink:#e9edf5;--mut:#a3aec3;--line:#2f3b55;--navy:#8eb0ef;--on:#0e1320;--in:#0e1320;
+  --ok:#7fd69c;--okbg:#17321f;--warn:#ffc46b;--warnbg:#3a2a10;--err:#ff8c9d;--focus:#ffcf4a;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--font)}
+a{color:var(--navy)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.skip{position:absolute;left:-999px;top:0;background:var(--card);color:var(--navy);padding:10px 14px;z-index:20}
+.skip:focus{left:16px;top:calc(env(safe-area-inset-top,0px) + 8px)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--card);border-bottom:3px solid var(--navy);padding:10px 16px}
+.top-in{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:space-between}
+.brand{font-weight:700;color:var(--navy);letter-spacing:.08em;font-size:15px;line-height:1.2}
+.brand span{display:block;font-weight:400;letter-spacing:0;color:var(--mut);font-size:13px}
+.prog{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mut);font-variant-numeric:tabular-nums}
+.meter{width:110px;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--navy);transition:width .2s}
+main{max-width:880px;margin:0 auto;padding:14px 16px calc(var(--bar) + 24px)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:0 0 14px}
+h2{margin:0 0 12px;font-size:18px;color:var(--navy);text-wrap:balance}
+.hint{font-size:14px;color:var(--mut);margin:-4px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
+.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;margin-top:10px}
+.f{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--mut);min-width:0}
+.f>span{font-weight:700;color:var(--ink)}
+.f small{color:var(--mut);font-size:12.5px}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--in);border:1px solid var(--line);border-radius:7px;padding:10px;width:100%;min-height:44px}
+textarea{resize:vertical;min-height:88px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font-weight:700;padding:0;margin-bottom:8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.pill{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:22px;background:var(--in);cursor:pointer;font-size:15px}
+.pill input{width:20px;height:20px;min-height:0;margin:0;accent-color:var(--navy);flex:none}
+.pill:has(input:checked){border-color:var(--navy);box-shadow:inset 0 0 0 1px var(--navy)}
+.chk{display:grid;grid-template-columns:2.2em 1fr;gap:4px 10px;padding:14px 0;border-top:1px solid var(--line)}
+.chk:first-of-type{border-top:0}
+.chk .n{color:var(--mut);font-weight:700;font-variant-numeric:tabular-nums}
+.chk p{margin:0}
+.chk .seg{grid-column:2;margin-top:10px}
+.seg .opts{gap:0}
+.seg .pill{border-radius:0;padding:8px 16px}
+.seg .pill:first-child{border-radius:22px 0 0 22px}
+.seg .pill:last-child{border-radius:0 22px 22px 0;margin-left:-1px}
+.seg .pill:has(input[value=ok]:checked){background:var(--okbg);color:var(--ok);border-color:var(--ok);box-shadow:inset 0 0 0 1px var(--ok);z-index:1}
+.seg .pill:has(input[value=notes]:checked){background:var(--warnbg);color:var(--warn);border-color:var(--warn);box-shadow:inset 0 0 0 1px var(--warn);z-index:1}
+.devs{display:grid;gap:12px}
+.dev{border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:10px}
+.dev-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dev-h b{color:var(--navy)}
+.tests .pill{font-size:14px;padding:6px 12px}
+.key{font-size:13.5px;color:var(--mut);margin:12px 0 0}
+.key i{display:block;margin-top:6px}
+button,.btn{font:inherit;font-size:15px;font-weight:700;min-height:44px;padding:9px 16px;border-radius:8px;border:1px solid var(--navy);background:var(--navy);color:var(--on);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+button.g,.btn.g{background:transparent;color:var(--navy)}
+button.sm{min-height:38px;padding:6px 12px;font-size:14px}
+button:disabled{opacity:.55;cursor:not-allowed}
+.sigbox{display:grid;gap:6px}
+.pad{position:relative;border:1px dashed var(--line);border-radius:8px;background:#fff;touch-action:none;height:130px}
+.pad canvas{width:100%;height:100%;display:block;border-radius:8px;cursor:crosshair}
+.pad .ph{position:absolute;inset:auto 10px 8px;font-size:13px;color:#6b7488;pointer-events:none;border-top:1px solid #b9c0cc;padding-top:2px}
+.sigrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--mut)}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(0,0,0,.08);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.bar-in{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar-in .sp{flex:1 1 auto}
+#st{font-size:13.5px;color:var(--mut);flex-basis:100%;margin:0}
+#st:empty{display:none}
+#st.err{color:var(--err)}
+#st.ok{color:var(--ok)}
+.issues{border:2px solid var(--err);border-radius:10px;background:var(--card);padding:14px 16px;margin:0 0 14px}
+.issues h2{color:var(--err)}
+.issues ul{margin:0;padding-left:20px}
+.manual{font-size:14px;color:var(--mut)}
+.manual code{font:inherit;color:var(--ink);font-weight:700;user-select:all}
+.subs{display:grid;gap:8px}
+.sub{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.sub div{min-width:0}
+.sub b{display:block}
+.sub small{color:var(--mut)}
+.sub .acts{display:flex;gap:6px}
+.foot{font-size:13px;color:var(--mut);text-align:center;margin:8px 0 0}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:520px){
+  .bar-in button{flex:1 1 0;padding-inline:8px;min-height:40px;font-size:14px}
+  #submit,#pdf{flex-basis:calc(50% - 4px);min-height:46px;font-size:15px}
+  .bar-in .sp{display:none}
+  .meter{width:70px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  :root{--bg:#fff;--card:#fff;--ink:#000;--mut:#333;--line:#999;--navy:#1f3864;--in:#fff}
+  .bar,.skip,.noprint{display:none!important}
+  .top{position:static}
+  main{padding-bottom:0}
+  .card{break-inside:avoid}
+}
+</style>
+
+<a class="skip" href="#app">Skip to the form</a>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">CITYTALK GROUP<span>Fire alarm service / maintenance check</span></div>
+    <div class="prog" aria-live="polite"><div class="meter" aria-hidden="true"><i id="meter"></i></div><span id="progtxt">0 of 14 checks</span></div>
+  </div>
+</header>
+
+<main id="app" tabindex="-1">
+  <div id="issues" class="issues" hidden role="alert"></div>
+  <form id="sheet" novalidate></form>
+  <section id="support" class="card noprint" hidden aria-labelledby="supH">
+    <h2 id="supH">Submitted sheets</h2>
+    <p class="hint">Only support staff with edit access can see this list. Open a sheet to view it, or download it as a PDF.</p>
+    <div id="subs" class="subs"><p class="hint">No sheets have been submitted yet. They appear here as soon as an engineer taps Submit.</p></div>
+  </section>
+  <p class="foot noprint">Your draft saves automatically in this browser. Submit sends the sheet to support. If submitting is not available, download the PDF or copy the summary and email it to <b>support@citytalkgroup.co.uk</b>.</p>
+</main>
+
+<div class="bar" role="region" aria-label="Sheet actions">
+  <div class="bar-in">
+    <button type="button" id="submit">Submit to support</button>
+    <button type="button" id="pdf" class="g">Download PDF</button>
+    <button type="button" id="copy" class="g">Copy summary</button>
+    <button type="button" id="print" class="g" hidden>Print</button>
+    <span class="sp"></span>
+    <button type="button" id="clear" class="g">Clear form</button>
+    <p id="st" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+const KEY='citytalk-fire-sheet-v2';
+const SUPPORT='support@citytalkgroup.co.uk';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let uid=0;const nid=k=>'f-'+k.replace(/[^\w-]/g,'_')+'-'+(++uid);
+
+/* ---------- field builders ---------- */
+const T=(k,l,t='text',x={})=>{const id=nid(k);return `<label class="f" for="${id}"><span>${l}</span>${x.help?`<small>${x.help}</small>`:''}<input id="${id}" data-k="${k}" type="${t}"${t==='number'?' inputmode="decimal" step="any"':''}${x.ac?` autocomplete="${x.ac}"`:' autocomplete="off"'}${x.list?` list="${x.list}"`:''}${x.req?' aria-required="true"':''}></label>`};
+const A=(k,l,r=3)=>{const id=nid(k);return `<label class="f" for="${id}"><span>${l}</span><textarea id="${id}" data-k="${k}" rows="${r}"></textarea></label>`};
+const S=(k,l,o)=>{const id=nid(k);return `<label class="f" for="${id}"><span>${l}</span><select id="${id}" data-k="${k}"><option value="">Select…</option>${o.map(x=>`<option>${x}</option>`).join('')}</select></label>`};
+const CB=(k,l)=>`<label class="pill"><input type="checkbox" data-k="${k}"><span>${l}</span></label>`;
+const R=(k,v,l)=>`<label class="pill"><input type="radio" name="${k}" value="${v}" data-k="${k}"><span>${l}</span></label>`;
+const sec=(id,h,b,hint='')=>`<section class="card" id="${id}" aria-labelledby="${id}-h"><h2 id="${id}-h">${h}</h2>${hint?`<p class="hint">${hint}</p>`:''}${b}</section>`;
+const bat=n=>`<div class="g4">${T('c'+n+'v','Charging voltage (VDC)','number')}${T('c'+n+'a','Battery capacity (Ah)','number')}${T('c'+n+'s','Standby current (A)','number')}${T('c'+n+'m','Alarm current (A)','number')}</div>`;
+
+const CHECKS=[
+['Check log book for false alarms and system problems, noting them below'],
+['Prior to any other tests being undertaken, with the mains on, check main control panel batteries:',bat(2)],
+['Power supply batteries:',bat(3)],
+['With the standby battery(ies) disconnected and the alarms activated, check that the alarms sound and record the power supply output voltage:','<div class="g4">'+T('c4v','Output voltage (V)','number')+'</div>'],
+['Fully check the control panel operation and physical condition'],
+['Check of audible sounders'],
+['Check of strobe warning devices / VADs (visual alarm devices), where applicable'],
+['Visual check for the integrity of the site equipment'],
+['Operationally check output devices where possible'],
+['<b>Full annual check</b> (device table not needed): check all fire alarm devices operate correctly, including that a fire alarm signal is given on operation of at least one manual call point or fire detector'],
+['<b>Interim check:</b> confirm one device has been checked in each zone/loop and complete the device table to identify which device was tested, including that a fire alarm signal is given on operation of at least one manual call point or fire detector'],
+['Check that a suitable zone plan (or other suitable diagrammatic representation) of the premises is provided on or adjacent to all CIE and repeat indicating equipment'],
+['Aspirator systems cleaned, filter replaced (bi-annually) and tested'],
+['Relevant details of the work carried out and faults identified have been entered in the system log book']];
+const TESTS=[['f','Fire'],['h','Head removal'],['s','Short circuit'],['o','Open circuit'],['c','Cleaned']];
+const plain=h=>h.replace(/<[^>]+>/g,'');
+
+const chkHTML=CHECKS.map((c,i)=>{const n=i+1;return `<div class="chk" id="chk${n}"><div class="n" aria-hidden="true">${n}.</div><div><p id="c${n}q"><span class="visually-hidden">Check ${n}: </span>${c[0]}</p>${c[1]||''}</div><fieldset class="seg" aria-labelledby="c${n}q"><div class="opts">${R('c'+n,'ok','OK')}${R('c'+n,'notes','See notes')}</div></fieldset></div>`}).join('');
+
+const devHTML=n=>`<div class="dev" data-dev="${n}" role="group" aria-labelledby="dev${n}h"><div class="dev-h"><b id="dev${n}h">Device ${n}</b><button type="button" class="g sm" data-rm="${n}" aria-label="Remove device ${n}">Remove</button></div><div class="grid">${T('d'+n+'z','Zone / loop')}${T('d'+n+'t','Device type','text',{list:'devtypes',help:'For example SO, H, M, VAD'})}${T('d'+n+'l','Number or location')}</div><fieldset class="tests"><legend>Tests passed</legend><div class="opts">${TESTS.map(([x,l])=>CB('d'+n+x,l)).join('')}</div></fieldset>${T('d'+n+'n','Comments / analogue values')}</div>`;
+
+const sigHTML=(k,l,nameK,nameL)=>`<div class="sigbox"><span class="f"><span id="${k}-l">${l}</span></span><div class="pad"><canvas data-sig="${k}" role="img" aria-labelledby="${k}-l" aria-describedby="${k}-d"></canvas><div class="ph" aria-hidden="true">Sign here with your finger, stylus or mouse</div></div><div class="sigrow"><span id="${k}-d">Draw a signature, or type the full name below.</span><button type="button" class="g sm" data-sigclear="${k}">Clear signature</button></div>${T(nameK,nameL,'text',{ac:'name'})}</div>`;
+
+$('#sheet').innerHTML=
+sec('site','Site and visit',`<div class="grid">${T('name','Site / client name','text',{ac:'organization',req:1})}${A('addr','Address',2)}${T('pc','Post code','text',{ac:'postal-code'})}${T('date','Date of check','date',{req:1})}${T('arr','Arrival time on site','time')}${T('dep','Departure time','time')}</div><fieldset style="margin-top:14px" id="stype"><legend>Type of service check</legend><div class="opts">${R('stype','full','Full annual check (all devices)')}${R('stype','interim','Interim – periodic check (1 per zone/loop)')}</div></fieldset>`)+
+sec('system','System details',`<fieldset><legend>Type of system</legend><div class="opts">${CB('addr_','Addressable')}${CB('conv','Conventional')}${CB('remote','Remote monitored')}</div></fieldset><div class="grid" style="margin-top:14px">${S('cat','System category',['L1','L2','L3','L4','L5','M','P1','P2','Other'])}${S('std','Installation standard / CoP',['BS 5839 Pt 1','BS 5839 Pt 6','HTM 05','Other'])}${T('frs','Means of signalling to the F&amp;RS')}${T('bafe','BAFE certificate no. (if relevant)')}${T('panel','Make of control panel')}${T('det','Make of detection')}${T('psu','Location of power supplies')}${T('zones','No. of zones','number')}${T('loops','No. of addressable loops','number')}${T('ndev','No. of devices','number')}</div>`)+
+sec('checks','Checks',chkHTML,'Choose OK or See notes for each check. Tap a choice again to clear it.')+
+sec('devices','Device test record',`<div class="devs" id="devs"></div><div style="margin-top:12px"><button type="button" class="g" id="adddev">Add another device</button></div><datalist id="devtypes"><option value="M">Manual call point</option><option value="SO">Optical smoke</option><option value="SI">Ionisation smoke</option><option value="H">Heat detector</option><option value="MS">Multi-sensor</option><option value="I/O">Input/output</option><option value="VAD">Visual alarm device</option></datalist><p class="key">M = manual call point. SO = optical smoke. SI = ionisation smoke. H = heat detector. I/O = input/output. MS = multi-sensor. VAD = visual alarm device.<i>Multi-sensor detectors: carry out a physical test by a method that confirms that products of combustion in the vicinity of the detector can reach the sensors and that the appropriate response is confirmed at the CIE. Visual alarm devices: confirm that they are not obstructed from view, that their lenses are clean and that the lighting is adequate.</i></p>`,'Interim check: record one device per zone/loop and tick each test that passed.')+
+sec('notes','Notes and false alarms',`<div class="grid">${A('notes','Notes, rectifications, work carried out this visit and variations (include why the check was not fully completed)',6)}</div><div class="grid" style="margin-top:12px">${T('fa','False alarms in the past 12 months','text',{help:'Or “Not recorded by client”'})}${T('fa1000','False alarms per 1000 automatic detectors per annum','text',{help:'Category M: “Not applicable”'})}</div><div class="grid" style="margin-top:12px">${A('extent','Extent of system covered by this certificate (the signatory’s liability is limited to the system as now described)',3)}</div>`)+
+sec('cert','Certification',`<p style="margin-top:0">I/we, being the competent person(s) responsible for the servicing of the fire alarm system described above, CERTIFY that the said work for which I/we have been responsible complies to the best of my/our knowledge and belief with recommendations of Clause 45 of BS 5839-1:2017, except for the variations, if any, stated in this certificate.</p><fieldset><legend>Work covered</legend><div class="opts">${CB('b1','Quarterly inspection of vented batteries')}${CB('b2','Periodic inspection and test')}${CB('b3','Inspection and test over a 12 month period')}</div></fieldset><p>We, being currently a certificated firm in respect of fire detection and fire alarm systems of the type(s) identified above, certify that the maintenance work identified above complies with the Standard or Code of Practice identified above and with all other requirements as currently laid down within the certification scheme in respect of such a system.</p><div class="grid">${T('cbody','Certification body')}${T('cscheme','Certification scheme')}${T('next','Next maintenance due (month)','month')}</div>`)+
+sec('sign','Sign-off',`<div class="grid">${sigHTML('esig','Engineer signature','ename','Engineer name (print)')}${sigHTML('usig','Responsible user signature','uname','Responsible user name (print)')}</div>`);
+
+/* ---------- state ---------- */
+let state={};
+try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){state={}}
+if(!state._devs)state._devs=[1,2,3,4];
+const fields=()=>document.querySelectorAll('#sheet [data-k]');
+
+function renderDevs(){
+  $('#devs').innerHTML=state._devs.map(devHTML).join('');
+  state._devs.forEach((n,i)=>{const h=document.getElementById('dev'+n+'h');if(h)h.textContent='Device '+(i+1)});
+  document.querySelectorAll('[data-rm]').forEach((b,i)=>b.setAttribute('aria-label','Remove device '+(i+1)));
+}
+function fill(){
+  fields().forEach(e=>{const v=state[e.dataset.k];
+    if(e.type==='checkbox')e.checked=!!v;
+    else if(e.type==='radio')e.checked=(v===e.value);
+    else e.value=v==null?'':v});
+  document.querySelectorAll('canvas[data-sig]').forEach(drawStored);
+  progress();
+}
+function read(){
+  const o={_devs:state._devs,esigImg:state.esigImg||'',usigImg:state.usigImg||''};
+  fields().forEach(e=>{const k=e.dataset.k;
+    if(e.type==='checkbox')o[k]=e.checked;
+    else if(e.type==='radio'){if(e.checked)o[k]=e.value;else if(!(k in o))o[k]=''}
+    else o[k]=e.value});
+  return o;
+}
+let saveT;
+function save(quiet){
+  state=read();
+  clearTimeout(saveT);
+  saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(state));if(!quiet)note('Draft saved in this browser')}catch(e){note('Draft could not be saved in this browser. Submit or download before closing.','err')}},250);
+  progress();
+}
+function progress(){
+  let n=0;for(let i=1;i<=CHECKS.length;i++)if(state['c'+i])n++;
+  $('#meter').style.width=(n/CHECKS.length*100)+'%';
+  $('#progtxt').textContent=n+' of '+CHECKS.length+' checks';
+}
+function note(t,c){const s=$('#st');s.textContent=t;s.className=c||''}
+
+/* tap a checked radio again to clear it */
+document.addEventListener('click',e=>{const t=e.target;
+  if(t.matches&&t.matches('#sheet input[type=radio]')&&state[t.dataset.k]===t.value){t.checked=false;save()}
+});
+$('#sheet').addEventListener('input',()=>save());
+$('#sheet').addEventListener('change',()=>save());
+$('#sheet').addEventListener('submit',e=>e.preventDefault());
+
+$('#adddev').onclick=()=>{state=read();const n=Math.max(0,...state._devs)+1;state._devs.push(n);renderDevs();fill();save(true);
+  const f=document.querySelector(`[data-dev="${n}"] input`);if(f)f.focus()};
+$('#devs').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(!b)return;
+  state=read();const n=+b.dataset.rm;state._devs=state._devs.filter(x=>x!==n);
+  ['z','t','l','n',...TESTS.map(t=>t[0])].forEach(x=>delete state['d'+n+x]);
+  renderDevs();fill();save(true);note('Device removed');$('#adddev').focus()});
+
+/* ---------- signature pads ---------- */
+const pads={};
+function sizeCanvas(c){const r=c.getBoundingClientRect();const d=window.devicePixelRatio||1;c.width=Math.max(1,Math.round(r.width*d));c.height=Math.max(1,Math.round(r.height*d));const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);x.lineWidth=2.2;x.lineCap='round';x.lineJoin='round';x.strokeStyle='#0b1530';return x}
+function drawStored(c){const k=c.dataset.sig;const x=sizeCanvas(c);const src=state[k+'Img'];
+  c.parentNode.querySelector('.ph').hidden=!!src;
+  if(!src)return;const img=new Image();img.onload=()=>{const r=c.getBoundingClientRect();x.drawImage(img,0,0,r.width,r.height)};img.src=src}
+document.querySelectorAll('canvas[data-sig]').forEach(c=>{
+  const k=c.dataset.sig;let drawing=false,last=null,dirty=false;
+  const pos=e=>{const r=c.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}};
+  c.addEventListener('pointerdown',e=>{drawing=true;last=pos(e);try{c.setPointerCapture(e.pointerId)}catch(_){}c.parentNode.querySelector('.ph').hidden=true;e.preventDefault()});
+  c.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e),x=c.getContext('2d');x.beginPath();x.moveTo(last.x,last.y);x.lineTo(p.x,p.y);x.stroke();last=p;dirty=true});
+  const end=()=>{if(!drawing)return;drawing=false;if(dirty){state=read();state[k+'Img']=exportSig(c);save()}dirty=false};
+  c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);c.addEventListener('pointerleave',end);
+  pads[k]=c;
+});
+function exportSig(c){const o=document.createElement('canvas');o.width=600;o.height=150;const x=o.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,600,150);x.drawImage(c,0,0,600,150);return o.toDataURL('image/jpeg',0.8)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-sigclear]');if(!b)return;const k=b.dataset.sigclear;state=read();state[k+'Img']='';drawStored(pads[k]);save();note('Signature cleared')});
+let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>document.querySelectorAll('canvas[data-sig]').forEach(drawStored),150)});
+
+/* ---------- summary data ---------- */
+const lbl=e=>{const l=e.closest('label');const s=l&&l.querySelector('span');return s?s.textContent.trim():''};
+function collect(s){
+  s=s||state;const g=k=>(s[k]==null?'':String(s[k]).trim());const secs=[];
+  const kv=(rows,k,l)=>{const v=g(k);if(v)rows.push([l,v])};
+  let r=[];kv(r,'name','Site / client');kv(r,'addr','Address');kv(r,'pc','Post code');kv(r,'date','Date of check');kv(r,'arr','Arrival');kv(r,'dep','Departure');
+  if(s.stype)r.push(['Service type',s.stype==='full'?'Full annual check (all devices)':'Interim – periodic check (1 per zone/loop)']);
+  secs.push(['Site and visit',r]);
+  r=[];const sys=[['addr_','Addressable'],['conv','Conventional'],['remote','Remote monitored']].filter(x=>s[x[0]]).map(x=>x[1]).join(', ');if(sys)r.push(['Type of system',sys]);
+  [['cat','System category'],['std','Installation standard / CoP'],['frs','Signalling to F&RS'],['bafe','BAFE certificate no.'],['panel','Control panel'],['det','Detection'],['psu','Power supplies'],['zones','Zones'],['loops','Addressable loops'],['ndev','Devices']].forEach(x=>kv(r,x[0],x[1]));
+  secs.push(['System details',r]);
+  r=[];CHECKS.forEach((c,i)=>{const n=i+1;const st=s['c'+n]==='ok'?'OK':s['c'+n]==='notes'?'SEE NOTES':'Not answered';
+    const ex=[];[['v','Charging V'],['a','Capacity Ah'],['s','Standby A'],['m','Alarm A']].forEach(([x,l])=>{if(g('c'+n+x))ex.push(l+' '+g('c'+n+x))});
+    if(n===4&&g('c4v')){ex.length=0;ex.push('Output V '+g('c4v'))}
+    r.push([n+'. '+plain(c[0]),st+(ex.length?' ('+ex.join(', ')+')':''),1])});
+  secs.push(['Checks',r]);
+  r=[];(s._devs||[]).forEach((n,i)=>{const t=TESTS.filter(([x])=>s['d'+n+x]).map(x=>x[1]).join(', ');const parts=[g('d'+n+'t'),g('d'+n+'l')].filter(Boolean).join(', ');
+    if(parts||t||g('d'+n+'n')||g('d'+n+'z'))r.push(['Zone/loop '+(g('d'+n+'z')||'?')+(parts?' – '+parts:''),[t?'Passed: '+t:'No tests ticked',g('d'+n+'n')].filter(Boolean).join('. ')])});
+  secs.push(['Device test record',r]);
+  r=[];kv(r,'notes','Notes / work carried out');kv(r,'fa','False alarms (12 months)');kv(r,'fa1000','Per 1000 detectors p.a.');kv(r,'extent','Extent of system covered');
+  secs.push(['Notes and false alarms',r]);
+  r=[];const w=[['b1','Quarterly inspection of vented batteries'],['b2','Periodic inspection and test'],['b3','Inspection and test over a 12 month period']].filter(x=>s[x[0]]).map(x=>x[1]).join('; ');if(w)r.push(['Work covered',w]);
+  kv(r,'cbody','Certification body');kv(r,'cscheme','Certification scheme');kv(r,'next','Next maintenance due');
+  secs.push(['Certification',r]);
+  r=[];r.push(['Engineer',(g('ename')||'-')+(s.esigImg?' (signed)':'')]);r.push(['Responsible user',(g('uname')||'-')+(s.usigImg?' (signed)':'')]);
+  secs.push(['Sign-off',r]);
+  return secs;
+}
+function textSummary(s){const L=['FIRE ALARM SERVICE / MAINTENANCE CHECK','CityTalk Group'];
+  collect(s).forEach(([h,rows])=>{if(!rows.length)return;L.push('',h.toUpperCase());rows.forEach(([k,v])=>L.push(k+': '+v))});return L.join('\n')}
+const fileBase=s=>{s=s||state;return ('Fire alarm check '+(s.name||'site')+' '+(s.date||'')).trim().replace(/[\\/:*?"<>|]+/g,'-').replace(/\s+/g,' ')};
+
+/* ---------- validation ---------- */
+function problems(){
+  const p=[];const s=state;
+  if(!String(s.name||'').trim())p.push(['site','Add the site or client name']);
+  if(!s.date)p.push(['site','Add the date of the check']);
+  if(!s.stype)p.push(['stype','Choose the type of service check']);
+  const un=[];for(let i=1;i<=CHECKS.length;i++)if(!s['c'+i])un.push(i);
+  if(un.length)p.push(['chk'+un[0],'Answer check'+(un.length>1?'s ':' ')+un.join(', ')]);
+  if(!String(s.ename||'').trim())p.push(['sign','Add the engineer name']);
+  if(!s.esigImg)p.push(['sign','Add the engineer signature']);
+  return p;
+}
+function showProblems(p){const b=$('#issues');
+  if(!p.length){b.hidden=true;b.innerHTML='';return}
+  b.innerHTML='<h2>Finish these before submitting</h2><ul>'+p.map(([id,t])=>`<li><a href="#${id}">${esc(t)}</a></li>`).join('')+'</ul>';
+  b.hidden=false;b.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  const a=b.querySelector('a');if(a)a.focus();
+}
+$('#issues').addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;e.preventDefault();const t=document.getElementById(a.getAttribute('href').slice(1));if(!t)return;t.scrollIntoView({block:'start'});const f=t.querySelector('input,textarea,select,canvas');if(f){if(f.tagName==='CANVAS')f.closest('.sigbox').querySelector('input').focus();else f.focus()}});
+
+/* ---------- PDF ---------- */
+const pdfSafe=t=>String(t).replace(/[–—]/g,'-').replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/…/g,'...').replace(/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/g,'');
+function buildPDF(s){
+  if(!window.jspdf)throw new Error('pdf-lib');
+  const d=new window.jspdf.jsPDF({unit:'mm',format:'a4'});const W=210,M=14,CW=W-2*M,LH=4.3;let y=0;
+  const head=()=>{d.setFillColor(31,56,100);d.rect(0,0,W,16,'F');d.setTextColor(255);d.setFont('helvetica','bold');d.setFontSize(12);d.text('CITYTALK GROUP',M,10);d.setFont('helvetica','normal');d.setFontSize(9);d.text('Fire alarm service / maintenance check',W-M,10,{align:'right'});d.setTextColor(0);y=24};
+  const need=h=>{if(y+h>284){d.addPage();head()}};
+  head();
+  d.setFontSize(9);d.setTextColor(70);
+  d.text(pdfSafe('BS 5839-1:2017 Clause 45 service record'+(s.name?'  |  '+s.name:'')+(s.date?'  |  '+s.date:'')),M,y);y+=7;d.setTextColor(0);
+  collect(s).forEach(([h,rows])=>{
+    if(!rows.length)return;need(14);
+    d.setFont('helvetica','bold');d.setFontSize(10.5);d.setTextColor(31,56,100);d.text(h,M,y);d.setDrawColor(31,56,100);d.setLineWidth(.4);d.line(M,y+1.6,W-M,y+1.6);y+=6.5;d.setTextColor(0);d.setFontSize(9);
+    rows.forEach(([k,v,wide])=>{
+      const kw=wide?CW-48:52,vw=CW-kw-4;
+      d.setFont('helvetica','bold');const kl=d.splitTextToSize(pdfSafe(k),kw);
+      d.setFont('helvetica','normal');const vl=d.splitTextToSize(pdfSafe(v),vw);
+      const h=Math.max(kl.length,vl.length)*LH+1.6;need(h);
+      d.setFont('helvetica',wide?'normal':'bold');d.text(kl,M,y);
+      d.setFont('helvetica',wide?'bold':'normal');
+      if(wide){if(v.startsWith('OK'))d.setTextColor(27,107,58);else if(v.startsWith('SEE'))d.setTextColor(138,75,0);else d.setTextColor(120)}
+      d.text(vl,M+kw+4,y);d.setTextColor(0);
+      y+=h;d.setDrawColor(220);d.setLineWidth(.2);d.line(M,y-LH+0.6,W-M,y-LH+0.6);
+    });
+    y+=3;
+  });
+  need(40);d.setFont('helvetica','bold');d.setFontSize(10.5);d.setTextColor(31,56,100);d.text('Signatures',M,y);d.line(M,y+1.6,W-M,y+1.6);y+=6;d.setTextColor(0);d.setFontSize(9);
+  [['esig','ename','Engineer',M],['usig','uname','Responsible user',M+CW/2+2]].forEach(([k,nk,l,x])=>{
+    if(s[k+'Img']){try{d.addImage(s[k+'Img'],'JPEG',x,y,72,18)}catch(_){}}
+    d.setDrawColor(150);d.line(x,y+19,x+80,y+19);d.setFont('helvetica','normal');d.text(pdfSafe(l+': '+(s[nk]||'')),x,y+23.5)});
+  const pages=d.getNumberOfPages();for(let i=1;i<=pages;i++){d.setPage(i);d.setFontSize(8);d.setTextColor(110);d.text('Page '+i+' of '+pages,W-M,292,{align:'right'});d.text('Generated '+new Date().toLocaleString('en-GB'),M,292)}
+  return d.output('blob');
+}
+
+/* ---------- runtime capabilities (when opened as a shared link) ---------- */
+const caps={db:null,user:null,downloads:null};
+const hasClaude=typeof window.claude==='object'&&window.claude&&typeof window.claude.use==='function';
+if(!hasClaude)$('#print').hidden=false;
+$('#print').onclick=()=>{try{window.print()}catch(e){note('Printing is not available here. Use Download PDF instead.','err')}};
+
+async function saveFile(blob,name){
+  if(caps.downloads){
+    try{await caps.downloads.save({filename:name,data:blob});note('Saved '+name,'ok');return}
+    catch(e){if(e&&e.code==='declined'){note('Download cancelled');return}if(e&&e.code==='rate_limited'){note('A download is already waiting for your confirmation.','err');return}}
+  }
+  if(!hasClaude){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);note('Saved '+name,'ok');return}
+  note('Downloads are not available in this view. Use Copy summary and email it to '+SUPPORT+'.','err');
+}
+$('#pdf').onclick=async()=>{state=read();try{await saveFile(buildPDF(state),fileBase()+'.pdf')}catch(e){note('The PDF could not be created. Check your connection, reload the page and try again, or use Copy summary.','err')}};
+
+function copyText(t,okMsg){
+  const fallback=()=>{const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}ta.remove();
+    note(ok?okMsg:'Copying is blocked here. Download the PDF and email it to '+SUPPORT+' instead.',ok?'ok':'err')};
+  try{navigator.clipboard.writeText(t).then(()=>note(okMsg,'ok'),fallback)}catch(_){fallback()}
+}
+$('#copy').onclick=()=>{state=read();copyText(textSummary(state),'Summary copied. Paste it into an email to '+SUPPORT+'.')};
+
+function sheetId(){if(!state._id){state._id=new Date().toISOString().slice(0,10)+'-'+Math.random().toString(36).slice(2,10);save(true)}return state._id}
+
+$('#submit').onclick=async()=>{
+  state=read();const p=problems();showProblems(p);if(p.length){note('Some details are missing. See the list at the top of the form.','err');return}
+  if(!caps.db){note('Submitting is not available in this view. Download the PDF and email it to '+SUPPORT+'.','err');return}
+  const b=$('#submit');b.disabled=true;note('Submitting…');
+  const form=Object.assign({},state);delete form._id;
+  const doc={form,site:String(state.name||''),date:String(state.date||''),engineer:String(state.ename||''),submittedAt:new Date().toISOString(),summary:textSummary(state)};
+  try{if(caps.user){const id=await caps.user.id();if(id)doc.submittedBy=id}}catch(_){}
+  const attempt=()=>caps.db.collection('sheets').doc(sheetId()).set(doc);
+  try{
+    try{await attempt()}catch(e){if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,800+Math.random()*800));await attempt()}else throw e}
+    note('Submitted to support at '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+'. Reference '+state._id+'. Submitting again updates the same sheet.','ok');
+  }catch(e){
+    const code=e&&e.code;
+    note(code==='quota_exceeded'?'The submissions store is full. Ask support to clear old sheets, and email the PDF for now.':'This sheet could not be submitted from your account. Download the PDF and email it to '+SUPPORT+'.','err');
+  }finally{b.disabled=false}
+};
+
+let armed=0,armT;
+$('#clear').onclick=function(){
+  if(!armed){armed=1;this.textContent='Tap again to clear';note('Tap Clear form again within 4 seconds to erase this sheet.');armT=setTimeout(()=>{armed=0;this.textContent='Clear form';note('')},4000);return}
+  clearTimeout(armT);armed=0;this.textContent='Clear form';
+  state={_devs:[1,2,3,4],date:new Date().toISOString().slice(0,10)};renderDevs();fill();save(true);showProblems([]);note('Form cleared. Ready for a new sheet.');window.scrollTo(0,0)};
+
+/* support list */
+const subsCache={};
+function renderSubs(snap){
+  const box=$('#subs');box.innerHTML='';
+  if(!snap.docs.length){const p=document.createElement('p');p.className='hint';p.textContent='No sheets have been submitted yet. They appear here as soon as an engineer taps Submit.';box.appendChild(p);return}
+  snap.docs.forEach(d=>{const v=d.data()||{};subsCache[d.id]=v;
+    const row=document.createElement('div');row.className='sub';
+    const info=document.createElement('div');const b=document.createElement('b');b.textContent=(v.site||'Unnamed site')+(v.date?' · '+v.date:'');
+    const sm=document.createElement('small');sm.textContent='Engineer: '+(v.engineer||'not given')+' · submitted '+(v.submittedAt?new Date(v.submittedAt).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'}):'');
+    info.append(b,sm);
+    const acts=document.createElement('div');acts.className='acts';
+    const o=document.createElement('button');o.type='button';o.className='g sm';o.textContent='Open';o.dataset.open=d.id;o.setAttribute('aria-label','Open sheet for '+(v.site||'unnamed site'));
+    const pd=document.createElement('button');pd.type='button';pd.className='g sm';pd.textContent='PDF';pd.dataset.spdf=d.id;pd.setAttribute('aria-label','Download PDF for '+(v.site||'unnamed site'));
+    acts.append(o,pd);row.append(info,acts);box.appendChild(row)});
+}
+let openArmed=null,openT;
+$('#subs').addEventListener('click',async e=>{
+  const o=e.target.closest('[data-open]'),pd=e.target.closest('[data-spdf]');
+  if(pd){const v=subsCache[pd.dataset.spdf];if(!v||!v.form)return;try{await saveFile(buildPDF(v.form),fileBase(v.form)+'.pdf')}catch(_){note('The PDF could not be created.','err')}return}
+  if(o){const id=o.dataset.open;
+    if(openArmed!==id){openArmed=id;o.textContent='Tap to replace your draft';clearTimeout(openT);openT=setTimeout(()=>{openArmed=null;o.textContent='Open'},4000);return}
+    openArmed=null;const v=subsCache[id];if(!v||!v.form)return;
+    state=Object.assign({},v.form,{_id:id});if(!state._devs)state._devs=[1,2,3,4];renderDevs();fill();save(true);showProblems([]);
+    note('Opened the sheet for '+(v.site||'unnamed site')+'. Changes you submit update that same sheet.','ok');window.scrollTo(0,0)}
+});
+
+async function initCaps(){
+  if(!hasClaude)return;
+  const [db,user,dl]=await Promise.all(['db','user','downloads'].map(n=>window.claude.use(n).catch(()=>null)));
+  caps.db=db;caps.user=user;caps.downloads=dl;
+  if(db&&user){let staff=false;try{staff=await user.canEdit()}catch(_){}
+    if(staff){$('#support').hidden=false;
+      db.collection('sheets').orderBy('submittedAt','desc').limit(100).onSnapshot(renderSubs,()=>{const p=document.createElement('p');p.className='hint';p.textContent='The submitted sheets list stopped updating. Reload the page to see new sheets.';$('#subs').appendChild(p)})}}
+}
+
+/* ---------- boot ---------- */
+if(!state.date)state.date=new Date().toISOString().slice(0,10);
+const barEl=document.querySelector('.bar');const setBar=()=>document.documentElement.style.setProperty('--bar',barEl.offsetHeight+'px');setBar();try{new ResizeObserver(setBar).observe(barEl)}catch(_){window.addEventListener('resize',setBar)}
+renderDevs();
+requestAnimationFrame(()=>{fill();initCaps()});
+})();
+</script>
+
+</body>
+</html>
